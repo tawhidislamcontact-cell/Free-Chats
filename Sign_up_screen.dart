@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -29,25 +31,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         _isVerifying = true;
       });
-      // এখানে পরবর্তীতে OTP ভেরিফাই করার লজিক যুক্ত করতে পারবেন
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sign Up - Free Chats')),
+      appBar: AppBar(title: const Text('Sign Up - Free Chats')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const SizedBox(height: 10),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Name'),
+                  decoration: const InputDecoration(labelText: 'Name'),
                   onSaved: (value) => _name = value ?? '',
                 ),
+                const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   value: _gender,
                   items: ['Male', 'Female', 'Other']
@@ -57,34 +61,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ))
                       .toList(),
                   onChanged: (value) => setState(() => _gender = value ?? 'Male'),
-                  decoration: InputDecoration(labelText: 'Gender'),
+                  decoration: const InputDecoration(labelText: 'Gender'),
                 ),
+                const SizedBox(height: 16),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Email or Phone Number'),
+                  decoration: const InputDecoration(labelText: 'Email or Phone Number'),
                   onSaved: (value) => _contact = value ?? '',
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 20),
                 if (_otpSent) ...[
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Verification Code'),
+                    decoration: const InputDecoration(labelText: 'Verification Code'),
                     keyboardType: TextInputType.number,
                     onSaved: (value) => _otp = value ?? '',
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _isVerifying ? null : _verifyAndSignUp,
                     child: _isVerifying
-                        ? SizedBox(
+                        ? const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
                           )
-                        : Text('Verify & Sign Up'),
+                        : const Text('Verify & Sign Up'),
                   ),
                 ] else ...[
                   ElevatedButton(
                     onPressed: _sendCode,
-                    child: Text('Send Verification Code'),
+                    child: const Text('Send Verification Code'),
                   ),
                 ],
               ],

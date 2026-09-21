@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/sign_up_screen.dart';
+import 'sign_up_screen.dart';
 
 void main() {
   runApp(const FreeChatsApp());
@@ -123,11 +123,11 @@ class MainTabController extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             SignUpScreen(),
-            ChatBubbleDemoScreen(),
-            SecurityScreen(),
+            const ChatBubbleDemoScreen(),
+            const SecurityScreen(),
           ],
         ),
       ),

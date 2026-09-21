@@ -1,5 +1,5 @@
 name: free_chats
-description: "A new Flutter project."
+description: "A professional cross-platform messaging app with local-first storage."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -9,8 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.1.0
-  cupertino_icons: ^1.0.6
+  shared_preferences: ^2.2.2
+  http: ^1.2.0
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -19,4 +20,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  
+  assets:
+    - assets/

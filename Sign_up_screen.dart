@@ -1,4 +1,4 @@
-import 'package02/flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -14,6 +14,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _otpSent = false;
   bool _isVerifying = false;
 
+  void _sendCode() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        _otpSent = true;
+      });
+    }
+  }
+
+  void _verifyAndSignUp() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        _isVerifying = true;
+      });
+      // এখানে পরবর্তীতে OTP ভেরিফাই করার লজিক যুক্ত করতে পারবেন
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,48 +41,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Name'),
-                onSaved: (value) => _name = value!,
-              ),
-              DropdownButtonFormField<String>(
-                value: _gender,
-                items: ['Male', 'Female', 'Other']
-                    .map((gender) => DropdownMenuItem(
-                          value: gender,
-                          child: Text(gender),
-                        ))
-                    .toList(),
-                onChanged: (value) => setState(() => _gender = value!),
-                decoration: InputDecoration(labelText: 'Gender'),
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Email or Phone Number'),
-                onSaved: (value) => _contact = value!,
-              ),
-              if (_otpSent) ...[
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Verification Code'),
-                  keyboardType: TextInputType.number,
-                  onSaved: (value) => _otp = value!,
+                  decoration: InputDecoration(labelText: 'Name'),
+                  onSaved: (value) => _name = value ?? '',
                 ),
-                ElevatedButton(
-                  onPressed: _isVerifying ? null : () {},
-                  child: _isVerifying
-                      ? CircularProgressIndicator()
-                      : Text('Verify & Sign Up'),
+                DropdownButtonFormField<String>(
+                  value: _gender,
+                  items: ['Male', 'Female', 'Other']
+                      .map((gender) => DropdownMenuItem(
+                            value: gender,
+                            child: Text(gender),
+                          ))
+                      .toList(),
+                  onChanged: (value) => setState(() => _gender = value ?? 'Male'),
+                  decoration: InputDecoration(labelText: 'Gender'),
                 ),
-              ] else ...[
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() => _otpSent = true);
-                  },
-                  child: Text('Send Verification Code'),
+                TextFormField(
+                  decoration: InputDecoration(labelText: 'Email or Phone Number'),
+                  onSaved: (value) => _contact = value ?? '',
                 ),
+                SizedBox(height: 16),
+                if (_otpSent) ...[
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Verification Code'),
+                    keyboardType: TextInputType.number,
+                    onSaved: (value) => _otp = value ?? '',
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _isVerifying ? null : _verifyAndSignUp,
+                    child: _isVerifying
+                        ? SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text('Verify & Sign Up'),
+                  ),
+                ] else ...[
+                  ElevatedButton(
+                    onPressed: _sendCode,
+                    child: Text('Send Verification Code'),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

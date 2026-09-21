@@ -1,339 +1,204 @@
-import 'package:flutter/material.dart';
-import 'sign_up_screen.dart';
+ import 'package:flutter/material.dart';
 
 void main() {
   runApp(const FreeChatsApp());
 }
 
-class FreeChatsApp extends StatelessWidget {
+class FreeChatsApp extends StatefulWidget {
   const FreeChatsApp({super.key});
+
+  @override
+  State<FreeChatsApp> createState() => _FreeChatsAppState();
+}
+
+class _FreeChatsAppState extends State<FreeChatsApp> {
+  // ডিফল্ট ডার্ক মোড (ফেসবুক স্টাইল #18191A)
+  ThemeMode _themeMode = ThemeMode.dark;
+
+  // ডার্ক এবং লাইট মোড টগল করার ফাংশন
+  void toggleTheme(bool isDark) {
+    setState(() {
+      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Free Chats',
       debugShowCheckedModeBanner: false,
-
-      // Light Theme
+      themeMode: _themeMode,
+      // লাইট মোড থিম
       theme: ThemeData(
-        useMaterial3: true,
         brightness: Brightness.light,
-        colorSchemeSeed: Colors.indigo,
-        scaffoldBackgroundColor: const Color(0xFFF7F9FC),
+        scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.indigo,
-          foregroundColor: Colors.white,
-          centerTitle: true,
-          elevation: 0,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.indigo,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey.shade300),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.indigo, width: 2),
-          ),
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          elevation: 1,
         ),
       ),
-
-      // Dark Theme
+      // ফেসবুক স্টাইল ডার্ক মোড
       darkTheme: ThemeData(
-        useMaterial3: true,
         brightness: Brightness.dark,
-        colorSchemeSeed: Colors.indigo,
-        scaffoldBackgroundColor: const Color(0xFF121212),
+        scaffoldBackgroundColor: const Color(0xFF18191A),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1E1E1E),
+          backgroundColor: const Color(0xFF242526),
           foregroundColor: Colors.white,
-          centerTitle: true,
           elevation: 0,
         ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.indigoAccent,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: const Color(0xFF1E1E1E),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey.shade800),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Colors.grey.shade800),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: Colors.indigoAccent, width: 2),
-          ),
-        ),
       ),
-
-      // System Auto Mode
-      themeMode: ThemeMode.system,
-
-      home: const MainTabController(),
+      // সরাসরি চ্যাট রুম স্ক্রিন সেট করা হয়েছে
+      home: const ChatRoomScreen(
+        peerName: 'Zahirul Islam Jihan',
+        lastSeen: 'Active now',
+      ),
     );
   }
 }
 
-class MainTabController extends StatelessWidget {
-  const MainTabController({super.key});
+// ==========================================
+// চ্যাট রুম স্ক্রিন কম্পোনেন্ট (একই ফাইলের সাথে যুক্ত)
+// ==========================================
+class ChatRoomScreen extends StatelessWidget {
+  final String peerName;
+  final String lastSeen;
+
+  const ChatRoomScreen({
+    super.key,
+    required this.peerName,
+    required this.lastSeen,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Free Chats'),
-          bottom: const TabBar(
-            indicatorColor: Colors.white,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            tabs: [
-              Tab(icon: Icon(Icons.person_add), text: 'Sign Up'),
-              Tab(icon: Icon(Icons.chat_bubble), text: 'Chats'),
-              Tab(icon: Icon(Icons.security), text: 'Security'),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {},
         ),
-        body: TabBarView(
+        titleSpacing: 0,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SignUpScreen(),
-            const ChatBubbleDemoScreen(),
-            const SecurityScreen(),
+            // প্রোফাইল ছবি ছাড়া শুধু বোল্ড নাম
+            Text(
+              peerName,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              lastSeen,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-// ==========================================
-// 1. CHAT BUBBLE UI MODULE
-// ==========================================
-class ChatBubbleDemoScreen extends StatelessWidget {
-  const ChatBubbleDemoScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _buildBubble(
-          context: context,
-          message: 'Hello! Welcome to Free Chats.',
-          isMe: false,
-          isDark: isDark,
-        ),
-        _buildBubble(
-          context: context,
-          message: 'Hi! Is the UI light & dark mode ready?',
-          isMe: true,
-          isDark: isDark,
-        ),
-        _buildBubble(
-          context: context,
-          message: 'Yes! It dynamically adapts to system themes and includes secure password management.',
-          isMe: false,
-          isDark: isDark,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBubble({
-    required BuildContext context,
-    required String message,
-    required bool isMe,
-    required bool isDark,
-  }) {
-    final bubbleColor = isMe
-        ? (isDark ? Colors.indigoAccent : Colors.indigo)
-        : (isDark ? const Color(0xFF2C2C2C) : Colors.grey.shade200);
-
-    final textColor = isMe ? Colors.white : (isDark ? Colors.white : Colors.black87);
-
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 6),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
-        decoration: BoxDecoration(
-          color: bubbleColor,
-          borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(16),
-            topRight: const Radius.circular(16),
-            bottomLeft: isMe ? const Radius.circular(16) : Radius.zero,
-            bottomRight: isMe ? Radius.zero : const Radius.circular(16),
+        actions: [
+          // অডিও কল বাটন
+          IconButton(
+            icon: const Icon(Icons.call),
+            onPressed: () {
+              // অডিও কল লজিক
+            },
           ),
-        ),
-        child: Text(
-          message,
-          style: TextStyle(color: textColor, fontSize: 15),
-        ),
+          // ভিডিও কল বাটন
+          IconButton(
+            icon: const Icon(Icons.videocam),
+            onPressed: () {
+              // ভিডিও কল লজিক
+            },
+          ),
+          // লক্ষ্য করুন: এখানে কোনো 'i' (information) বাটন রাখা হয়নি।
+        ],
       ),
-    );
-  }
-}
-
-// ==========================================
-// 2. SECURITY & PASSWORD MANAGEMENT MODULE
-// ==========================================
-class SecurityScreen extends StatefulWidget {
-  const SecurityScreen({super.key});
-
-  @override
-  State<SecurityScreen> createState() => _SecurityScreenState();
-}
-
-class _SecurityScreenState extends State<SecurityScreen> {
-  final _oldPassController = TextEditingController();
-  final _newPassController = TextEditingController();
-  final _confirmPassController = TextEditingController();
-  final _contactController = TextEditingController();
-  final _otpController = TextEditingController();
-
-  bool _isForgotPasswordMode = false;
-  bool _otpSent = false;
-
-  void _changePassword() {
-    if (_newPassController.text != _confirmPassController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('New passwords do not match!')),
-      );
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Password changed successfully!')),
-    );
-  }
-
-  void _sendOtp() {
-    setState(() {
-      _otpSent = true;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('OTP sent to your registered contact!')),
-    );
-  }
-
-  void _resetPasswordWithOtp() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Password reset successfully!')),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                _isForgotPasswordMode ? 'Forgot Password' : 'Change Password',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _isForgotPasswordMode = !_isForgotPasswordMode;
-                    _otpSent = false;
-                  });
-                },
-                child: Text(_isForgotPasswordMode ? 'Back to Change Password' : 'Forgot Password?'),
-              ),
-            ],
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(10),
+              children: const [
+                // ডেমো চ্যাট বাবল (লোকাল ফার্স্ট পলিসি অনুযায়ী)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    child: Chip(
+                      label: Text("হ্যালো! কেমন আছো?"),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4.0),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "সব ঠিকঠাক আছে ভাই।",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 16),
-          if (!_isForgotPasswordMode) ...[
-            // Standard Change Password Form
-            TextField(
-              controller: _oldPassController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Current Password'),
+          // মেসেজ ইনপুট এবং মিডিয়া শেয়ারিং বার
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.add_circle, color: Colors.blue),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.camera_alt, color: Colors.blue),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.image, color: Colors.blue),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.mic, color: Colors.blue),
+                  onPressed: () {},
+                ),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Message",
+                      filled: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.thumb_up, color: Colors.blue),
+                  onPressed: () {},
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _newPassController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'New Password'),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _confirmPassController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Confirm New Password'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _changePassword,
-              child: const Text('Update Password'),
-            ),
-          ] else ...[
-            // OTP Forgot Password Flow
-            TextField(
-              controller: _contactController,
-              decoration: const InputDecoration(labelText: 'Registered Email or Phone'),
-            ),
-            const SizedBox(height: 12),
-            if (!_otpSent)
-              ElevatedButton(
-                onPressed: _sendOtp,
-                child: const Text('Send OTP'),
-              )
-            else ...[
-              TextField(
-                controller: _otpController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Enter OTP Code'),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: _newPassController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Set New Password'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _resetPasswordWithOtp,
-                child: const Text('Reset Password'),
-              ),
-            ],
-          ],
+          ),
         ],
       ),
     );
